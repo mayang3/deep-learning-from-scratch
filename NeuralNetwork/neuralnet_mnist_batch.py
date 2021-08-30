@@ -57,10 +57,12 @@ batch_size = 100 # 배치 크기
 accuracy_cnt = 0
 # 각 이미지마다 추론을 시작한다.
 for i in range(0, len(x), batch_size):
+    # 기존 하나의 row 에서 batch_size 만큼 row 의 갯수가 늘어난 행렬이 된다. [100 * 784]
     x_batch = x[i:i+batch_size]
     y_batch = predict(network, x_batch)
-    # 1번째 차원을 구성하는 각 원소에서 최대값의 인덱스를 찾게 해줌
-    # 여기서 1번째 차원은 2차원이기 때문에, 2차원을 구성하는 각 열마다의 최대값을 구해줌(즉 배열 하나 안에서의 최대값을 구해줌)
+
+    # axis가 0 이면 열, axis가 1이면 행을 기준으로 최대값을 구해준다.
+    # 아래에서는 axis=1 이므로, 각 row 의 최대값을 구해줌
     p = np.argmax(y_batch, axis=1)
     # 넘파이 배열끼리 비교하여 True/False bool 배열을 만들고, 이 결과 배열에서 True 가 몇개인지를 센다
     accuracy_cnt += np.sum(p == t[i:i+batch_size])
